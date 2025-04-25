@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Vyomsetu Space Station · Control Panel</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0d1117 0%, #1a2332 100%);
+            color: #e6edf3;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        h2 {
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #58a6ff;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            margin: 1.5rem 0 1rem;
+            color: #c3e6ff;
+        }
+
+        .card {
+            background: #161b22;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid #30363d;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 8px;
+            background: #1e88e5;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 136, 229, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        #sensorData {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1rem;
+            color: #c3e6ff;
+            white-space: pre-line;
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Vyomsetu Space Station · Control Panel</h2>
+        <div class="card">
+            <h3>Device Control</h3>
+            <button class='btn' onclick="toggle('led1')">Toggle LED 1</button>
+            <button class='btn' onclick="toggle('led2')">Toggle LED 2</button>
+            <button class='btn' onclick="toggle('buzzer1')">Toggle Buzzer 1</button>
+            <button class='btn' onclick="toggle('buzzer2')">Toggle Buzzer 2</button>
+            <button class='btn' onclick="toggle('buzzer3')">Toggle Buzzeer 3</button>
+        </div>
+        <div class="card">
+            <h3>Sensor Readings</h3>
+            <p id='sensorData'>Loading...</p>
+        </div>
+        <div class="card">
+			<h3>Know More</h3>
+			<br>
+			<h4>What is Vyomsetu? </h4>
+			<p>Vyomsetu — Sanskrit for “Bridge to the Sky” — is our vision of a modular, futuristic space station designed to adapt with evolving tech and
+reduce space waste. Its modularity makes it scalable, sustainable, and smart.</p>
+			<br>
+			<hr>
+            <br>
+            <h4>Why Vyomsetu matters? </h4>
+			<p>It’s a living space station concept — smart, scalable, and future-ready. From scientific research to satellite relays, Vyomsetu is built to grow,
+adapt, and lead in a future where space is no longer the final frontier — it’s the next platform.</p>
+			<br>
+			<hr>
+            <br>
+            <h4>Core Goals </h4>
+            <p>
+				- 🔭 <b>Explore:</b> Enable space research & mission support. <br>
+				- 🧪 <b>Experiment:</b> Host scientific work in orbit. <br>
+				- 🛰 <b>Connect:</b> Act as a central hub for satellites and future. spacecraft
+			<p>
+			<br>
+		</div>
+    </div>
+    <script>
+        let states = { led1: false, led2: false, buzzer1: false, buzzer2: false, buzzer3: false };
+        function toggle(device) {
+            states[device] = !states[device];
+            fetch(`/toggle?device=${device}&state=${states[device] ? 'on' : 'off'}`);
+        }
+        setInterval(() => {
+            fetch('/sensors').then(res => res.json()).then(data => {
+                document.getElementById('sensorData').innerText =
+                    `Temp: ${data.temperature}°C\nHumidity: ${data.humidity}%\nDistance: ${data.distance} cm`;
+            });
+        }, 2000);
+    </script>
+</body>
+</html>
